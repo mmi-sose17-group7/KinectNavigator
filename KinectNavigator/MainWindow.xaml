@@ -1,0 +1,51 @@
+﻿<Window x:Class="KinectNavigator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:k="http://schemas.microsoft.com/kinect/2013" 
+        xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="clr-namespace:KinectNavigator"
+        Title="Kinect Navigator" Height="500" Width="700" WindowState="Maximized" WindowStyle="None"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid
+                x:Name="kinectCanvas"
+                Grid.Column="0"
+                Grid.Row="0"
+            >
+        <m:Map x:Name="mainMap" 
+               ZoomLevel="11"
+               Center="42, 13"     
+               HorizontalContentAlignment="Stretch"
+               />
+        </Grid>
+        <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Opacity="0.8" >
+            <TextBlock Style="{StaticResource metrolike}" 
+                       x:Name="Statusbar"
+                       HorizontalAlignment="Stretch" 
+                       TextAlignment="Center"
+                       Grid.Column="0" Grid.Row="0" 
+                       Text="{Binding Path=StatusBarText, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" >
+                  <!-- Animates the text block's opacity. -->
+                <TextBlock.Triggers>
+                    <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                        <BeginStoryboard>
+                            <Storyboard x:Name="statusBarBoard">
+                                <DoubleAnimation
+            Storyboard.TargetName="Statusbar" 
+            Storyboard.TargetProperty="(TextBlock.Opacity)"
+            From="1.0" To="0.0" Duration="0:0:4" 
+            AutoReverse="False" RepeatBehavior="1x" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </TextBlock.Triggers>
+            </TextBlock>
+        </Grid>
+    </Grid>
+</Window>
