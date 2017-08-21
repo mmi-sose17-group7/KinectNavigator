@@ -110,7 +110,7 @@ namespace KinectNavigator
             speech.PropertyChanged += new PropertyChangedEventHandler(speechPropertyChanged);
             
             /* Kinect Setup and Hand Cursors */
-            // InitKinect();
+            InitKinect();
             shoulder = new Vector(0.75, 0);
    
             inactive = new SolidColorBrush(Colors.SteelBlue);
@@ -137,11 +137,15 @@ namespace KinectNavigator
             el.Width = 100;
             el.Visibility = Visibility.Visible;
             el.Fill = active;
-            double cy = (820 - el.Height - 200) / 2.0;
-            double cx = (1600 - el.Width - 200) / 2.0;
+            // double cy = (820 - el.Height - 200) / 2.0;
+            // double cx = (1600 - el.Width - 200) / 2.0;
+            double cy = (this.ActualHeight - leftCursor.Height) / 2;
+            double cx = (this.ActualWidth - leftCursor.Width - this.ActualWidth / 4) / 2;
+            cy += 400;
+            cx += 1200;
             el.SetValue(Canvas.LeftProperty, cx);
             el.SetValue(Canvas.TopProperty, cy);
-            //kinectCanvas.Children.Add(el);
+            // kinectCanvas.Children.Add(el);
 
 
             StatusBarText = "Use both hands";
