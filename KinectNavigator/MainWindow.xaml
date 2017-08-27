@@ -14,16 +14,15 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid
-                x:Name="kinectCanvas"
-                Grid.Column="0"
-                Grid.Row="0"
             >
-        <m:Map x:Name="mainMap" 
+                <Canvas x:Name="kinectCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ZIndex="3">
+                </Canvas>
+                <m:Map x:Name="mainMap" 
                ZoomLevel="11"
                Center="42, 13"     
-               HorizontalContentAlignment="Stretch"
+               HorizontalContentAlignment="Stretch" Grid.ZIndex="2"
                />
-        </Grid>
+            </Grid>
         <Grid Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Opacity="0.8" >
             <TextBlock Style="{StaticResource metrolike}" 
                        x:Name="Statusbar"

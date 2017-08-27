@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using System.ComponentModel;
 using Microsoft.Maps.MapControl.WPF;
 using System.Xml;
@@ -85,11 +86,19 @@ namespace KinectNavigator
         public string StatusBarText { get { return _StatusBarText; } set { _StatusBarText = value; NotifyPropertyChanged("StatusBarText"); } }
 
         // private readonly KinectSensorChooser sensorChooser;
+        private DispatcherTimer dispatcherTimer;
 
         public MainWindow()
         {
             /* Basic map logic */
             InitializeComponent();
+            dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 3);
+            dispatcherTimer.Start();
+
+
+           
             mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(BingMapsKey);
             mainMap.Focus();
             var rmm = new RoadMode();
@@ -137,16 +146,40 @@ namespace KinectNavigator
             el.Width = 100;
             el.Visibility = Visibility.Visible;
             el.Fill = active;
-            double cy = (820 - el.Height - 200) / 2.0;
-            double cx = (1600 - el.Width - 200) / 2.0;
+            // double cy = (820 - el.Height - 200) / 2.0;
+            // double cx = (1600 - el.Width - 200) / 2.0;
+            double cy = (this.ActualHeight - leftCursor.Height) / 2;
+            double cx = (this.ActualWidth - leftCursor.Width - this.ActualWidth / 4) / 2;
+            cy += 400;
+            cx += 1200;
             el.SetValue(Canvas.LeftProperty, cx);
             el.SetValue(Canvas.TopProperty, cy);
-            //kinectCanvas.Children.Add(el);
+            // kinectCanvas.Children.Add(el);
 
 
-            StatusBarText = "Use both hands";
+            // StatusBarText = "Use both hands";
             Statusbar.DataContext = this;
         }
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+            {
+            // check if kinect is connected on every tick
+            if (KinectSensor.KinectSensors.Count != 0)
+            {
+                if (KinectSensor.KinectSensors[0].Status == KinectStatus.Connected)
+                {
+                    InitKinect();
+                    var timer = (DispatcherTimer)sender;
+                    timer.Stop();
+                    this.StatusBarText = "Kinect sensor connected. Use both hands.";
+                }
+                else
+                {
+                    this.StatusBarText = "Kinect sensor is not yet ready. Is power connected?";
+                }
+            }
+            else
+                this.StatusBarText = "Kinect sensor is not connected";
+            }
 
 
         private void moveCursor(Ellipse cursor, double dx, double dy)
